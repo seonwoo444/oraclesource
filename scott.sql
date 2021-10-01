@@ -1,37 +1,98 @@
---SQL은 대소문자 구별 안함
+-- DDL()
+-- 실행하면 반영됨
 
--- scott 계정에 존재하는 모든 테이블을 조회
-SELECT *
-FROM tab;
--- 조회는 SELECT로 시작 무조건 암기
---delete 무조건
---update 외워야
---insert 하는 것 들
---DBMS를 사용하기 위해 ORCLE 다운(18Ex)
---SQL 쿼리문 실행 => SQL Plus
+-- create(생성), alter(변경), drop(삭제)
 
---SQL Developer, 오렌지, 토드.... => 에디터
+-- create table 테이블이름(
+--              필드명1 자료형,
+--              필드명2 자료형,
+--)
 
--- 조회(SELECT) : 행 단위로 조회, 열 단위로 조회
---emp 테이블의 내용을 전체조회
-SELECT
-    * FROM emp;
+--  테이블 이름 규칙
+-- 문자로 시작
+--  같은 사용자 안에서 동일한 테이블 명 사용 불가
+-- sql 키워드는 테이블 이름으로 사용 불가
+
+-- 필드명 생성 규칙
+-- 문자로 시작
+-- 열 이름은 중복되면 안됨
+-- sql 키워드 사용불가
+                        
+-- 자료형 : 숫자 number, 가변문자 varchar2, 날짜 date
+                        
+                        
+create table emp_ddl(
+ EMPNO NUMBER(4),-- 숫자로 4자리 허용
+ ENAME VARCHAR2(10),
+ JOB VARCHAR2(9),
+ MGR NUMBER(4),
+ HIREDATE date,
+ SAL NUMBER(7,2),
+ COMM NUMBER(7,2),
+ DEPTNO NUMBER(7)
+);
+
+DESC EMP_DDL;
+
+DROP TABLE EMP_DDL;
+
+-- 구조+데이터 이용하여 생성
+CREATE TABLE DEPT_DDL AS SELECT * FROM DEPT;
+CREATE TABLE DEPT_DDL_30 AS SELECT * FROM DEPT WHERE DEPTNO = 30;
+
+-- 다른 테이블에 구조만 복사하여 세 테이블 생성
+CREATE TABLE DEPT_DDL2 AS SELECT * FROM DEPT WHERE 1<>1;
+
+-- ALTER
+-- 이미 생성된 객체를 변경
+
+CREATE TABLE EMP_ALTER AS SELECT
+    * FROM EMP;
     
---    emp 테이블의 empno, ename, job만 조회
-SELECT
- empno, ename, job FROM emp;
- 
--- emp 테이블의 empno, deptno 조회
-SELECT
-    empno, deptno FROM emp;
-    
---    중복을 제거 후 조회 : distinct
-SELECT DISTINCT deptno FROM emp;
+--    새로운 컬럼(열) 추가 : ADD
+DESC EMP_ALTER;
 
--- 별칭을 붙여서 조회 : AS(alais)
-SELECT EMPNO AS 사원번호 FROM emp;
+ALTER TABLE EMP_ALTER ADD HP VARCHAR2(20);
+DESC EMP_ALTER;
+SELECT * FROM EMP_ALTER;
 
-SELECT ename AS 사원명,job AS "직 책",sal AS 급여,comm AS 추가수당,sal*12+comm AS 연봉 FROM emp;
-    
-    
+-- RENAME : 열 이름 변경
+ALTER TABLE EMP_ALTER RENAME COLUMN HP TO HEL;
 
+-- MODIFY : 열의 자료형을 변경
+
+ALTER TABLE EMP_ALTER MODIFY EMPNO NUMBER(5);
+
+-- DROP : 열 삭제
+
+ALTER TABLE EMP_RENAME DROP COLUMN HEL;
+
+-- 테이블 이름 변경
+
+RENAME EMP_ALTER TO EMP_RENAME;
+DESC EMP_RENAME;
+
+-- 테이블 데이터를 삭제 TRUNCATE
+SELECT * FROM EMP_RENAME;
+TRUNCATE TABLE EMP_RENAME;
+
+-- 실습1 MEMBER TABLE 만들기
+CREATE TABLE member_test(
+    ID CHAR(8),
+    NAME VARCHAR(10),
+    ADDR VARCHAR(50),
+    NATION CHAR(4),
+    EMAIL VARCHAR(50),
+    AGE NUMBER(7,2)
+);
+
+DESC member_test;
+
+-- MEMBER에 BIGO 열 추가
+ALTER TABLE MEMBER_TEST ADD BIGO VARCHAR2(20);
+
+-- BIGO 열 크기를 30으로 변경
+ALTER TABLE MEMBER_TEST MODIFY BIGO VARCHAR2(30);
+
+-- BIGO이름 변경
+ALTER TABLE MEMBER_TEST RENAME COLUMN BIGO TO REMARK;
